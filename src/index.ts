@@ -1,4 +1,3 @@
-// Create a class called ExpirableMap that extends Map and has a method called expire that takes a key and a time in milliseconds. The method should set a timeout that will remove the key from the map after the time has passed.
 export class ExpirableMap extends Map {
   timeouts;
   constructor(private defaultTimeInMs = 0) {
@@ -6,17 +5,24 @@ export class ExpirableMap extends Map {
     this.timeouts = new Map();
   }
   setExpiration(key: any, timeInMs = this.defaultTimeInMs) {
-    const timeout = setTimeout(() => {
+    this.timeouts.set(key, setTimeout(() => {
       this.delete(key);
-    }, timeInMs);
-    this.timeouts.set(key, timeout);
+    }, timeInMs));
+    return this;
   }
   set(key: any, value: any, timeInMs = this.defaultTimeInMs) {
-    super.set(key, value);
+    const superReturn = super.set(key, value);
     if (timeInMs != 0) {
-      if (this.timeouts.has(key)) clearTimeout(this.timeouts.get(key));
+      clearTimeout(this.timeouts.get(key));
       this.setExpiration(key, timeInMs);
     }
-    return this;
+    return superReturn;
+  }
+
+  delete(key: any) {
+    const superReturn = super.delete(key);
+    clearTimeout(this.timeouts.get(key));
+    this.timeouts.delete(key);
+    return superReturn;
   }
 }
