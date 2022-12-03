@@ -18,7 +18,7 @@
   },
   "scripts": {
     "ts-types": "tsc --emitDeclarationOnly --outDir dist",
-    "build": "npm run lint && rimraf dist && node esbuild.js && npm run ts-types",
+    "build": "npm run lint && rimraf dist && NODE_ENV=production node esbuild.js && npm run ts-types",
     "demo-test": "for file in demo/*.js; do node $file; done",
     "prettier": "prettier --write .",
     "lint": "eslint . --ext .ts",

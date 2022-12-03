@@ -1,6 +1,6 @@
 # What is this?
 
-This is a low footprint Map implementation that expires entries after a given time.
+This is a low footprint (Less than 1kb) Map implementation that expires entries after a given time.
 
 # How do I install it?
 
