@@ -16,7 +16,7 @@ Simply import the module and start using it as follows:
 
 ```js
 import { ExpirableMap } from "@cadienvan/expirable-map";
-const map = new ExpirableMap(1000); // 1000 is the expiration time in milliseconds, default for every entry
+const map = new ExpirableMap(1000, true);
 map.set("key", "value");
 map.get("key"); // "value"
 ```
@@ -41,11 +41,16 @@ map.set("key", "value", 0); // The entry associated with the key "key" will neve
 
 # How does this work?
 
+The `ExpirableMap` constructor can take two arguments:
+- `options` (Object): An object containing the following properties:
+  - `expirationTime` (Number): The default expiration time in milliseconds for the entries in the map. Defaults to `0` (never expires).
+  - `keepAlive` (Boolean): Whether or not to keep alive (Re-start expiration timer) entries when set before expiring. Defaults to `true`.
+- `entries` (Array): An array of entries to initialize the map with. Each entry is an array containing the key and the value.
 The implementation is so simple because it extends the native `Map` class and overrides the `set` method to add a timeout that will remove the entry after the given time, just needing a new `setExpiration` method to manage the timeouts.  
 
 # What if I set a key that already exists?
 
-The `set` method will override the previous entry and reset the timeout for that key.
+The `set` method will override the previous entry and reset the timeout for that key if the `keepAlive` option is set to `true` (default). If it is set to `false`, the timeout will not be reset.
 
 # Tests
 
@@ -57,4 +62,4 @@ npm test
 
 # Scaffolding
 
-This project was generated using Cadienvan's own [npm-package-ts-scaffholding](https://github.com/Cadienvan/npm-package-ts-scaffholding) so it has all the necessary tools to develop, test and publish a TypeScript package importable both via CommonJS and ES Modules.
+This project was generated using Cadienvan's own [npm-package-ts-scaffolding](https://github.com/Cadienvan/npm-package-ts-scaffolding) so it has all the necessary tools to develop, test and publish a TypeScript package importable both via CommonJS and ES Modules.
