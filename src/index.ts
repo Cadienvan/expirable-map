@@ -1,34 +1,37 @@
 export type ExpirableMapOptions = {
-  defaultTimeInMs: number | undefined;
+  defaultTtl: number | undefined;
   keepAlive: boolean | undefined;
 };
 
 export const defaultOptions: ExpirableMapOptions = {
-  defaultTimeInMs: 0,
+  defaultTtl: 0,
   keepAlive: true
 };
 
-export class ExpirableMap<EMKey = any, EMVal = any> extends Map<EMKey, EMVal> {
-  timeouts: Map<EMKey, NodeJS.Timeout>;
+type TTL = number;
+export const NOT_EXPIRING_TTL = 0; 
+
+export class ExpirableMap<Key = any, Val = any> extends Map<Key, Val> {
   public readonly [Symbol.toStringTag] = 'ExpirableMap';
-  defaultTimeInMs: number;
+  timeouts: Map<Key, NodeJS.Timeout>;
+  defaultTtl: number;
   keepAlive: boolean;
 
   constructor(
-    entries: Array<[EMKey, EMVal, number?]> = [],
+    entries: Array<[Key, Val, TTL?]> = [],
     options: ExpirableMapOptions = defaultOptions
   ) {
     super();
-    this.defaultTimeInMs = options.defaultTimeInMs || 0;
+    this.defaultTtl = options.defaultTtl || NOT_EXPIRING_TTL;
     this.keepAlive = options.keepAlive ?? true;
-    this.timeouts = new Map<EMKey, NodeJS.Timeout>();
+    this.timeouts = new Map();
     if (entries)
       entries.forEach((entry) =>
-        this.set(entry[0], entry[1], entry[2] || this.defaultTimeInMs)
+        this.set(entry[0], entry[1], entry[2] || this.defaultTtl)
       );
   }
 
-  setExpiration(key: EMKey, timeInMs = this.defaultTimeInMs) {
+  setExpiration(key: Key, timeInMs = this.defaultTtl) {
     this.timeouts.set(
       key,
       setTimeout(() => {
@@ -38,20 +41,19 @@ export class ExpirableMap<EMKey = any, EMVal = any> extends Map<EMKey, EMVal> {
     return this;
   }
 
-  set(key: EMKey, value: EMVal, timeInMs = this.defaultTimeInMs) {
+  set(key: Key, value: Val, ttl = this.defaultTtl) {
     if (this.keepAlive) this.clearTimeout(key);
-    if ((this.keepAlive || !this.has(key)) && timeInMs !== 0)
-      this.setExpiration(key, timeInMs);
+    if ((this.keepAlive || !this.has(key)) && ttl !== NOT_EXPIRING_TTL)
+      this.setExpiration(key, ttl);
     return super.set(key, value);
   }
 
-  delete(key: EMKey) {
-    const superReturn = super.delete(key);
+  delete(key: Key) {
     this.clearTimeout(key);
-    return superReturn;
+    return super.delete(key);
   }
 
-  clearTimeout(key: EMKey) {
+  clearTimeout(key: Key) {
     clearTimeout(this.timeouts.get(key));
     this.timeouts.delete(key);
   }

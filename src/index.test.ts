@@ -42,7 +42,7 @@ it('should keep the key alive when re-set before expiring', async () => {
 });
 
 it('should remove the key when set twice without keepAlive and time passed', async () => {
-  const map = new ExpirableMap([], { defaultTimeInMs: 100, keepAlive: false });
+  const map = new ExpirableMap([], { defaultTtl: 100, keepAlive: false });
   map.set('a', 1);
   expect(map.size).toBe(1);
   expect(map.get('a')).toBe(1);

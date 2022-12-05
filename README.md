@@ -1,6 +1,6 @@
 # What is this?
 
-This is a low footprint (Less than 1kb) Map implementation that expires entries after a given time.
+This is a low footprint (~1.2KB) Map implementation that expires entries after a given time.
 
 # How do I install it?
 
@@ -16,7 +16,7 @@ Simply import the module and start using it as follows:
 
 ```js
 import { ExpirableMap } from "@cadienvan/expirable-map";
-const map = new ExpirableMap(1000, true);
+const map = new ExpirableMap();
 map.set("key", "value");
 map.get("key"); // "value"
 ```
@@ -43,10 +43,13 @@ map.set("key", "value", 0); // The entry associated with the key "key" will neve
 
 The `ExpirableMap` constructor can take two arguments:
 - `options` (Object): An object containing the following properties:
-  - `expirationTime` (Number): The default expiration time in milliseconds for the entries in the map. Defaults to `0` (never expires).
+  - `defaultTtl` (Number): The default expiration time in milliseconds for the entries in the map. Defaults to `0` (never expires).
   - `keepAlive` (Boolean): Whether or not to keep alive (Re-start expiration timer) entries when set before expiring. Defaults to `true`.
-- `entries` (Array): An array of entries to initialize the map with. Each entry is an array containing the key and the value.
-The implementation is so simple because it extends the native `Map` class and overrides the `set` method to add a timeout that will remove the entry after the given time, just needing a new `setExpiration` method to manage the timeouts.  
+- `entries` (Array): An array of entries to initialize the map with. Each entry is an array containing the following values:
+  - `key` (Any): The key of the entry.
+  - `value` (Any): The value of the entry.
+  - `ttl` (Number): The expiration time in milliseconds for the entry. Defaults to `defaultTtl`.
+You can simply swap a `Map` with an `ExpirableMap` and it will work as expected.
 
 # What if I set a key that already exists?
 
