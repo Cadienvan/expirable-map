@@ -13,7 +13,7 @@ export const NOT_EXPIRING_TTL = 0;
 
 export class ExpirableMap<Key = any, Val = any> extends Map<Key, Val> {
   public readonly [Symbol.toStringTag] = 'ExpirableMap';
-  expirationTimeouts: Map<Key, NodeJS.Timeout>;
+  timeouts: Map<Key, NodeJS.Timeout>;
   defaultTtl: number;
   keepAlive: boolean;
 
@@ -24,7 +24,7 @@ export class ExpirableMap<Key = any, Val = any> extends Map<Key, Val> {
     super();
     this.defaultTtl = options.defaultTtl || NOT_EXPIRING_TTL;
     this.keepAlive = options.keepAlive ?? true;
-    this.expirationTimeouts = new Map();
+    this.timeouts = new Map();
     if (entries)
       entries.forEach((entry) =>
         this.set(entry[0], entry[1], entry[2] || this.defaultTtl)
@@ -32,7 +32,7 @@ export class ExpirableMap<Key = any, Val = any> extends Map<Key, Val> {
   }
 
   setExpiration(key: Key, timeInMs = this.defaultTtl) {
-    this.expirationTimeouts.set(
+    this.timeouts.set(
       key,
       setTimeout(() => {
         this.delete(key);
@@ -54,7 +54,7 @@ export class ExpirableMap<Key = any, Val = any> extends Map<Key, Val> {
   }
 
   clearTimeout(key: Key) {
-    clearTimeout(this.expirationTimeouts.get(key));
-    this.expirationTimeouts.delete(key);
+    clearTimeout(this.timeouts.get(key));
+    this.timeouts.delete(key);
   }
 }
