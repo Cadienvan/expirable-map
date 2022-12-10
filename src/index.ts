@@ -9,7 +9,7 @@ export const defaultOptions: ExpirableMapOptions = {
 };
 
 type TTL = number;
-export const NOT_EXPIRING_TTL = 0; 
+export const NOT_EXPIRING_TTL = 0;
 
 export class ExpirableMap<Key = any, Val = any> extends Map<Key, Val> {
   public readonly [Symbol.toStringTag] = 'ExpirableMap';
