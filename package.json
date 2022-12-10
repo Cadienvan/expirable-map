@@ -2,7 +2,7 @@
   "name": "@cadienvan/expirable-map",
   "private": false,
   "description": "A re-implementation of the Map object that expires entries after a specified time.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
