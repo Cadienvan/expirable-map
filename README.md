@@ -64,6 +64,14 @@ You can run the tests by using the following command:
 npm test
 ```
 
+# Example
+
+Run the example with the following script
+
+```bash
+npm run example
+```
+
 # Scaffolding
 
 This project was generated using Cadienvan's own [npm-package-ts-scaffolding](https://github.com/Cadienvan/npm-package-ts-scaffolding) so it has all the necessary tools to develop, test and publish a TypeScript package importable both via CommonJS and ES Modules.

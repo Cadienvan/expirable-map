@@ -9,13 +9,6 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
   "scripts": {
     "ts-types": " tsc --emitDeclarationOnly --outDir dist",
     "check": "npm run prettier && npm run lint && npm test",
