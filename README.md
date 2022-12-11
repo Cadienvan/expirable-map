@@ -1,3 +1,7 @@
+# Expirables
+The following repository has been encapsulated in the [Expirables](https://github.com/Cadienvan/expirables) repository.  
+Please, go there in order to get the latest updates.
+
 # What is this?
 
 This is a low footprint (~1.2KB) Map implementation that expires entries after a given time.
